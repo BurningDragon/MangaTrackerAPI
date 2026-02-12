@@ -1,8 +1,6 @@
 ﻿using MangaTracker.Models;
 using MangaTracker.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.Collections;
-using System.Threading.Tasks;
 
 namespace MangaTracker.Repository.Repositories
 {
@@ -28,7 +26,7 @@ namespace MangaTracker.Repository.Repositories
 
         public async Task<Creator?> GetByIdAsync(int Id)
         {
-            return await _dbContext.Creators.Include(c => c.Mangas).FirstOrDefaultAsync(c => c.Id == Id);
+            return await _dbContext.Creators.Include(c => c.Mangas!).ThenInclude(m => m.Creators).FirstOrDefaultAsync(c => c.Id == Id);
         }
 
         public void UpdateCreator(Creator creator)

@@ -8,5 +8,7 @@ namespace MangaTracker.Services.Interfaces
         Task<OperationResult> AddAsync(Creator entity);
         Task<IEnumerable<Creator>> GetCreatorsAsync();
         Task<Creator?> GetCreatorByIdAsync(int id);
+        Task<OperationResult> UpdateCreator(CreatorForMangaDto entity);
+        Task<OperationResult> DeleteCreatorAsync(int id);
     }
 }

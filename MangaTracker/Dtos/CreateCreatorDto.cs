@@ -1,6 +1,6 @@
 ﻿namespace MangaTracker.Dtos
 {
-    public class CreateCreator
+    public class CreateCreatorDto
     {
         public required string FirstName { get; set; }
         public required string LastName { get; set; }

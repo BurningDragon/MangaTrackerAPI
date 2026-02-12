@@ -14,8 +14,10 @@ var configuration = builder.Configuration;
 builder.Services.AddDbContext<MangaTrackerDbContext>(options => options.UseSqlite(configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<ICreatorRepository, CreatorRepository>();
+builder.Services.AddScoped<IMangaRepository, MangaRepository>();
 
 builder.Services.AddScoped<ICreatorService, CreatorService>();
+builder.Services.AddScoped<IMangaService, MangaService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

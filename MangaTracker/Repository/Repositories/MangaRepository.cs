@@ -1,6 +1,5 @@
 ﻿using MangaTracker.Models;
 using MangaTracker.Repository.Interfaces;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
@@ -10,6 +9,12 @@ namespace MangaTracker.Repository.Repositories
     {
         private readonly MangaTrackerDbContext _dbContext = dbContext;
         private bool _disposed;
+
+        public async Task AddMangaAsync(Manga manga)
+        {
+            await _dbContext.AddAsync(manga);
+        }
+
         void IMangaRepository.DeleteManga(Manga manga)
         {
             _dbContext.Remove(manga);
@@ -20,9 +25,28 @@ namespace MangaTracker.Repository.Repositories
             return await _dbContext.Mangas.AnyAsync(c => c.Id == Id);
         }
 
-        async Task<bool> IMangaRepository.ExistsAsync(string title, int creatorId)
+        async Task<bool> IMangaRepository.ExistsAsync(string title,IEnumerable<Creator> creators, int volume)
         {
-            return await _dbContext.Mangas.AnyAsync(c => c.Title.Equals(title) && c.Creators.Any(c => c.Id == creatorId));
+            var result = false;
+
+            if (await _dbContext.Mangas.AnyAsync())
+            {
+                var mangas = await _dbContext.Mangas.Where(m => m.Title  == title && m.Volume == volume).ToListAsync();
+                if(mangas.Count == 0)
+                {
+                    return result;
+                }
+
+                foreach (var manga in mangas)
+                {
+                    result = manga.Creators.All(c => creators.All(cr => cr.Id == c.Id));
+                    if (result)
+                    {
+                        return result;
+                    }
+                }
+            }
+            return result;
         }
 
         async Task<IEnumerable<Manga>> IMangaRepository.GetAllMangasAsync()
